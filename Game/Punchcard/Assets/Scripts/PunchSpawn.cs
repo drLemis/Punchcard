@@ -1,62 +1,68 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PunchSpawn : MonoBehaviour
 {
-    public Counter counter;
-    public GameObject punch;
-    public float space = 1f;
-	
-    [Range(0, 100)]
-    public float correctPercentChance = 10f;
+	public Counter counter;
+	public GameObject punch;
+	public float space = 1f;
 
-    [Range(0, 10)]
-    public int amount = 1;
-    public float timer = 1f;
-    private float currentTimer = 1f;
+	[Range(0, 100)]
+	public float correctPercentChance = 10f;
 
-    public int maxSpawn = 10;
-    private int currentSpawn = 0;
+	[Range(0, 10)]
+	public int amount = 1;
+	public float timer = 1f;
+	private float currentTimer = 1f;
 
-    private bool active = true;
+	public int maxSpawn = 10;
+	private int currentSpawn = 0;
 
-    void Start()
-    {
-        currentTimer = timer;
-        currentSpawn = 0;
-        active = true;
-    }
+	private bool active = true;
 
-    void Update()
-    {
-        if (active)
-        {
-            currentTimer -= Time.deltaTime;
+	void Start()
+	{
+		currentTimer = timer;
+		currentSpawn = 0;
+		active = true;
+	}
 
-            if (currentTimer <= 0)
-            {
-                currentTimer = timer;
+	void Update()
+	{
+		if (active)
+		{
+			currentTimer -= Time.deltaTime;
 
-                if (currentSpawn++ >= maxSpawn)
-                    active = false;
+			if (currentTimer <= 0)
+			{
+				currentTimer = timer;
 
-                for (int i = 0; i < amount; i++)
-                {
-                    GameObject newPunch = Instantiate(punch);
+				if (currentSpawn++ >= maxSpawn)
+					active = false;
 
-                    if (Random.Range(0, 100) <= correctPercentChance)
-                    {
-                        newPunch.GetComponent<PlayerClick>().correct = true;
-                        newPunch.GetComponent<SpriteRenderer>().color = Color.green;
-                    }
+				for (int i = 0; i < amount; i++)
+				{
+					GameObject newPunch = Instantiate(punch, transform);
 
-                    newPunch.GetComponent<PlayerClick>().counter = counter;
+					if (Random.Range(0, 100) <= correctPercentChance)
+					{
+						newPunch.GetComponent<PlayerClick>().correct = true;
+						newPunch.GetComponent<SpriteRenderer>().color = Color.green;
+					}
 
-                    newPunch.transform.position = transform.position + new Vector3(space * i, 0, 0);
-                    Destroy(newPunch, 4f);
-                }
-            }
-        }
-    }
+					newPunch.GetComponent<PlayerClick>().counter = counter;
+
+					newPunch.transform.position = transform.position + new Vector3(space * i, 0, 0);
+					Destroy(newPunch, 4f);
+				}
+			}
+		}
+		else
+		{
+			if (transform.childCount == 0)
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		}
+	}
 }
