@@ -7,6 +7,7 @@ public class PunchSpawn : MonoBehaviour
 {
 	public Counter counter;
 	public GameObject punch;
+	public GameObject mark;
 	public float space = 1f;
 
 	[Range(0, 100)]
@@ -49,13 +50,17 @@ public class PunchSpawn : MonoBehaviour
 					if (Random.Range(0, 100) <= correctPercentChance)
 					{
 						newPunch.GetComponent<PlayerClick>().correct = true;
-						newPunch.GetComponent<SpriteRenderer>().color = Color.green;
+						// newPunch.GetComponent<SpriteRenderer>().color = Color.green;
+
+						GameObject newMark = Instantiate(mark, transform);
+						newMark.transform.position = transform.position + new Vector3(space * i, 0, 0.5f);
+						Destroy(newMark, 6f);
 					}
 
 					newPunch.GetComponent<PlayerClick>().counter = counter;
 
 					newPunch.transform.position = transform.position + new Vector3(space * i, 0, 0);
-					Destroy(newPunch, 4f);
+					Destroy(newPunch, 6f);
 				}
 			}
 		}
